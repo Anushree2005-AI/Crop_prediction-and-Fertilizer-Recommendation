@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Fertilizer Recommendation | Croptimizer</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <!-- jsPDF (for PDF download) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #1B5E20;
+      --secondary: #2E7D32;
+      --accent: #8BC34A;
+      --gold: #F9A825;
+      --dark: #0D3B0F;
+      --light: #F8FFF0;
+      --gray: #555;
+      --bg: #FAFFF5;
+      --gradient: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --shadow: 0 15px 35px rgba(0,0,0,0.1);
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: #333;
+      line-height: 1.7;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .page-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .page-header p {
+      font-size: 1.1rem;
+      color: var(--gray);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* Grid Layout */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+      align-items: start;
+    }
+
+    /* Info Card */
+    .info-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 2.5rem;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(139,195,74,0.15);
+      backdrop-filter: blur(10px);
+    }
+
+    .info-card h2 {
+      color: var(--primary);
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .info-card p {
+      color: var(--gray);
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+
+    /* Form Card */
+    .form-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 2.5rem;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(139,195,74,0.15);
+      backdrop-filter: blur(10px);
+    }
+
+    .form-card h2 {
+      text-align: center;
+      color: var(--primary);
+      font-size: 1.6rem;
+      margin-bottom: 2rem;
+    }
+
+    .input-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .input-group label {
+      display: block;
+      color: var(--primary);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .input-group input,
+    .input-group select {
+      width: 100%;
+      padding: 0.9rem 1rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      font-size: 1rem;
+      background: #fff;
+      transition: border-color 0.3s;
+    }
+
+    .input-group input:focus,
+    .input-group select:focus {
+      outline: none;
+      border-color: var(--secondary);
+    }
+
+    .color-preview {
+      display: inline-block;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+      border: 2px solid #ddd;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.9rem 2rem;
+      border-radius: 50px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .btn-primary {
+      background: var(--gradient);
+      color: white;
+      box-shadow: 0 4px 15px rgba(46,125,50,0.4);
+      border: none;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(46,125,50,0.5);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+      margin-top: 1rem;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .btn-secondary:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    /* Result */
+    #result {
+      background: white;
+      border: 2px solid var(--accent);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+      display: none;
+    }
+
+    #result h3 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-size: 1.4rem;
+    }
+
+    #result p {
+      margin: 0.7rem 0;
+      color: #333;
+      font-size: 1rem;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      margin: 1.5rem 0;
+      display: none;
+      color: var(--primary);
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid var(--secondary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-right: 0.5rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .page-header h1 { font-size: 2.3rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1>AI Fertilizer Recommendation</h1>
+      <p>Get precise, data-driven crop and fertilizer suggestions based on your soil analysis.</p>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="form-grid">
+
+      <!-- Info Card -->
+      <div class="info-card">
+        <h2><i data-lucide="info"></i> How It Works</h2>
+        <p>Our AI model analyzes <strong>soil color, N, P, K, and pH</strong> to recommend the best crop and fertilizer blend for your land.</p>
+        <p>Trained on thousands of real soil samples. Reduces waste by up to <strong>30%</strong> and boosts yield by <strong>20%</strong>.</p>
+
+        <div id="result">
+          <h3><i data-lucide="leaf"></i> Your Recommendation</h3>
+          <p id="recommendedCrop"></p>
+          <p id="recommendedFertilizer"></p>
+          <p id="cropcontent"></p>
+          <button class="btn btn-secondary" id="downloadPDF">
+            <i data-lucide="download"></i> Download PDF Report
+          </button>
+        </div>
+      </div>
+
+      <!-- Form Card -->
+      <div class="form-card">
+        <h2>Enter Soil Data</h2>
+        <form id="cropForm">
+
+          <div class="input-group">
+            <label for="soilColor">Soil Color</label>
+            <div style="display:flex; align-items:center;">
+              <select id="soilColor" required>
+                <option value="">Select Color</option>
+                <option value="Black" data-color="#2d1b1b">Black</option>
+                <option value="Brown" data-color="#8B4513">Brown</option>
+                <option value="Red" data-color="#DC143C">Red</option>
+                <option value="Yellow" data-color="#FFD700">Yellow</option>
+                <option value="Gray" data-color="#808080">Gray</option>
+              </select>
+              <div id="colorPreview" class="color-preview"></div>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label for="nitrogen">Nitrogen (N)</label>
+            <input type="number" id="nitrogen" step="0.01" placeholder="e.g., 25.5" required>
+          </div>
+
+          <div class="input-group">
+            <label for="phosphorus">Phosphorus (P)</label>
+            <input type="number" id="phosphorus" step="0.01" placeholder="e.g., 15.2" required>
+          </div>
+
+          <div class="input-group">
+            <label for="potassium">Potassium (K)</label>
+            <input type="number" id="potassium" step="0.01" placeholder="e.g., 30.0" required>
+          </div>
+
+          <div class="input-group">
+            <label for="pH">pH Level</label>
+            <input type="number" id="pH" step="0.01" min="0" max="14" placeholder="e.g., 6.5" required>
+          </div>
+
+          <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <span>Analyzing your soil data...</span>
+          </div>
+
+          <button type="submit" class="btn btn-primary">
+            Get Recommendation
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    lucide.createIcons();
+
+    // Color Preview
+    $('#soilColor').on('change', function() {
+      const color = $(this).find(':selected').data('color') || '#ccc';
+      $('#colorPreview').css('background-color', color);
+    });
+
+    // Form Submit
+    $('#cropForm').submit(function(e) {
+      e.preventDefault();
+      $('#loading').show();
+      $('.btn-primary').prop('disabled', true);
+
+      const formData = {
+        soil_color: $('#soilColor').val(),
+        nitrogen: $('#nitrogen').val(),
+        phosphorus: $('#phosphorus').val(),
+        potassium: $('#potassium').val(),
+        pH: $('#pH').val()
+      };
+
+      $.ajax({
+        type: 'POST',
+        url: 'http://127.0.0.1:5000/train_model',
+        contentType: 'application/json',
+        data: JSON.stringify(formData),
+        success: function(res) {
+          $('#loading').hide();
+          $('.btn-primary').prop('disabled', false);
+
+          $('#recommendedCrop').html(`<strong>Crop:</strong> ${res.recommended_crop}`);
+          $('#recommendedFertilizer').html(`<strong>Fertilizer:</strong> ${res.recommended_fertilizer}`);
+          $('#cropcontent').html(`<strong>Details:</strong> ${res.crop_description}`);
+          $('#result').show();
+        },
+        error: function() {
+          alert('Error: Could not connect to AI model.');
+          $('#loading').hide();
+          $('.btn-primary').prop('disabled', false);
+        }
+      });
+    });
+
+    // Download PDF
+    $('#downloadPDF').on('click', function() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      doc.setFont('helvetica');
+      doc.setFontSize(16);
+      doc.text('Croptimizer AI Recommendation Report', 20, 20);
+
+      doc.setFontSize(12);
+      doc.text(`Crop: ${$('#recommendedCrop').text().replace('Crop: ', '')}`, 20, 40);
+      doc.text(`Fertilizer: ${$('#recommendedFertilizer').text().replace('Fertilizer: ', '')}`, 20, 50);
+      doc.text(`Details: ${$('#cropcontent').text().replace('Details: ', '')}`, 20, 60, { maxWidth: 170 });
+
+      doc.save('croptimizer-recommendation.pdf');
+    });
+  </script>
+</body>
+</html>
