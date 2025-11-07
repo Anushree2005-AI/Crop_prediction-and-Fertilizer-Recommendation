@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Croptimizer – Smart Fertilizer, Stronger Harvest</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+
+  <!-- AOS Animation -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+  <!-- Icons (Lucide) -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <style>
+    /* ==== ROOT COLORS ==== */
+    :root {
+      --primary: #1B5E20;      /* Deep forest */
+      --secondary: #2E7D32;    /* Rich green */
+      --accent: #8BC34A;       /* Lime accent */
+      --gold: #F9A825;         /* Harvest gold */
+      --dark: #0D3B0F;
+      --light: #F8FFF0;
+      --gray: #555;
+      --bg: #FAFFF5;
+      --gradient: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: #333;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    .container { max-width: 1280px; margin:0 auto; padding:0 1.5rem; }
+
+    /* ==== GLASS NAV ==== */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(12px);
+      background: rgba(255,255,255,.85);
+      border-bottom: 1px solid rgba(0,0,0,.06);
+      transition: all .3s;
+    }
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      font-weight: 700;
+      font-size: 1.6rem;
+      color: var(--primary);
+      text-decoration: none;
+    }
+    .logo img { width:44px; height:44px; border-radius:12px; object-fit:cover; }
+    nav ul {
+      display: flex;
+      gap: 2rem;
+      list-style:none;
+    }
+    nav a {
+      position:relative;
+      color: var(--gray);
+      font-weight:500;
+      text-decoration:none;
+      transition: color .3s;
+    }
+    nav a:hover { color:var(--primary); }
+    nav a.active {
+      color:var(--primary);
+      font-weight:600;
+    }
+    nav a.active::after {
+      content:'';
+      position:absolute;
+      bottom:-10px; left:0;
+      width:100%; height:3px;
+      background:var(--secondary);
+      border-radius:2px;
+      animation: underline .4s ease-out;
+    }
+    @keyframes underline { from{width:0} to{width:100%} }
+
+    /* Hamburger */
+    .hamburger { display:none; cursor:pointer; font-size:1.6rem; color:var(--primary); }
+
+    /* ==== HERO ==== */
+    .hero {
+      min-height:95vh;
+      position:relative;
+      display:flex;
+      align-items:center;
+      overflow:hidden;
+    }
+    .hero-bg {
+      position:absolute;
+      inset:0;
+      background: var(--gradient);
+      background-attachment: fixed;
+      z-index:-2;
+    }
+    .hero-bg::before {
+      content:'';
+      position:absolute;
+      inset:0;
+      background: url('{{ url_for("static", filename="asset/photo8.jpg") }}') center/cover no-repeat;
+      opacity:.7;
+      filter: brightness(1.1);
+    }
+    .hero-content {
+      max-width:720px;
+      color:#fff;
+      z-index:1;
+    }
+    .hero h1 {
+      font-family:'Playfair Display',serif;
+      font-size:4.5rem;
+      line-height:1.1;
+      margin-bottom:.5rem;
+      animation: fadeUp .8s ease-out;
+    }
+    .hero h2 {
+      font-size:2rem;
+      color:var(--accent);
+      margin-bottom:1rem;
+      animation: fadeUp .8s .2s ease-out both;
+    }
+    .hero p {
+      font-size:1.15rem;
+      margin-bottom:2rem;
+      opacity:.92;
+      animation: fadeUp .8s .4s ease-out both;
+    }
+    @keyframes fadeUp {
+      from{opacity:0; transform:translateY(30px);}
+      to{opacity:1; transform:none;}
+    }
+
+    /* ==== BUTTONS ==== */
+    .btn {
+      display:inline-flex;
+      align-items:center;
+      gap:.5rem;
+      padding:.9rem 2rem;
+      border-radius:50px;
+      font-weight:600;
+      text-decoration:none;
+      transition:all .3s ease;
+      cursor:pointer;
+      position:relative;
+      overflow:hidden;
+    }
+    .btn-primary {
+      background:var(--gradient);
+      color:#fff;
+      box-shadow:0 4px 15px rgba(46,125,50,.4);
+    }
+    .btn-primary:hover {
+      transform:translateY(-4px);
+      box-shadow:0 12px 25px rgba(46,125,50,.5);
+    }
+    .btn-primary i { transition:transform .3s; }
+    .btn-primary:hover i { transform:translateX(4px); }
+
+    .btn-outline {
+      background:transparent;
+      color:#fff;
+      border:2px solid #fff;
+    }
+    .btn-outline:hover {
+      background:#fff;
+      color:var(--primary);
+    }
+
+    /* ==== ABOUT SECTION ==== */
+    .about { padding:120px 0; background:#fff; }
+    .about-grid {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:4rem;
+      align-items:center;
+    }
+    .about-img {
+      border-radius:20px;
+      overflow:hidden;
+      box-shadow:0 25px 50px rgba(0,0,0,.12);
+      transition:transform .5s;
+    }
+    .about-img:hover { transform:scale(1.03); }
+    .about-img img { width:100%; height:100%; object-fit:cover; transition:transform .6s; }
+    .about-img:hover img { transform:scale(1.07); }
+
+    .about-content h2 {
+      font-size:2.8rem;
+      color:var(--primary);
+      margin-bottom:1.2rem;
+    }
+    .stats {
+      display:flex;
+      gap:2rem;
+      margin-top:2rem;
+    }
+    .stat {
+      text-align:center;
+      flex:1;
+    }
+    .stat .num {
+      font-size:2.5rem;
+      font-weight:900;
+      color:var(--secondary);
+    }
+    .stat .label { font-size:.95rem; color:var(--gray); }
+
+    /* ==== FOOTER ==== */
+    footer {
+      background:var(--dark);
+      color:#ddd;
+      padding:4rem 0 2rem;
+    }
+    .footer-grid {
+      display:grid;
+      grid-template-columns:1.2fr 1fr 1fr 1.2fr;
+      gap:2.5rem;
+      margin-bottom:2rem;
+    }
+    .footer-logo {
+      display:flex;
+      align-items:center;
+      gap:.75rem;
+      font-weight:700;
+      font-size:1.5rem;
+      color:#fff;
+    }
+    .footer-logo img { width:40px; height:40px; border-radius:10px; }
+    .footer-social {
+      display:flex;
+      gap:1rem;
+      margin-top:1rem;
+    }
+    .footer-social a {
+      width:44px; height:44px;
+      background:rgba(255,255,255,.1);
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition:.3s;
+    }
+    .footer-social a:hover {
+      background:var(--accent);
+      transform:translateY(-4px);
+    }
+    .footer-links h4 {
+      color:var(--accent);
+      margin-bottom:1rem;
+      font-size:1.1rem;
+    }
+    .footer-links ul {
+      list-style:none;
+      font-size:.95rem;
+    }
+    .footer-links a {
+      color:#bbb;
+      text-decoration:none;
+      transition:.2s;
+    }
+    .footer-links a:hover { color:#fff; }
+
+    .newsletter input {
+      padding:.75rem 1rem;
+      border:none;
+      border-radius:50px 0 0 50px;
+      width:100%;
+      font-size:.95rem;
+    }
+    .newsletter button {
+      padding:.75rem 1.2rem;
+      background:var(--gold);
+      color:#fff;
+      border:none;
+      border-radius:0 50px 50px 0;
+      cursor:pointer;
+      transition:.3s;
+    }
+    .newsletter button:hover { background:#e69500; }
+
+    .copyright {
+      text-align:center;
+      padding-top:1.5rem;
+      border-top:1px solid rgba(255,255,255,.1);
+      font-size:.9rem;
+      opacity:.7;
+    }
+
+    /* ==== RESPONSIVE ==== */
+    @media (max-width:992px) {
+      .hero h1 { font-size:3.5rem; }
+      .about-grid { grid-template-columns:1fr; }
+      .footer-grid { grid-template-columns:1fr 1fr; }
+    }
+    @media (max-width:768px) {
+      .hamburger { display:block; }
+      nav ul {
+        position:fixed;
+        top:80px; right:-100%;
+        width:75%; height:calc(100vh - 80px);
+        background:#fff;
+        flex-direction:column;
+        align-items:center;
+        padding:2rem 0;
+        transition:right .4s ease;
+        box-shadow:-4px 0 15px rgba(0,0,0,.1);
+      }
+      nav ul.open { right:0; }
+      .hero h1 { font-size:2.8rem; }
+      .hero h2 { font-size:1.6rem; }
+      .stats { flex-wrap:wrap; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="container nav-container">
+      <a href="{{ url_for('index') }}" class="logo">
+        <img src="{{ url_for('static', filename='asset/logo.jpg') }}" alt="Croptimizer">
+        Croptimizer
+      </a>
+      <nav>
+        <ul id="navMenu">
+          <li><a href="{{ url_for('index') }}" class="active">Home</a></li>
+          <li><a href="{{ url_for('about') }}">About</a></li>
+          <li><a href="{{ url_for('services') }}">Services</a></li>
+          <li><a href="{{ url_for('contact') }}">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="hamburger" id="hamburger"><i data-lucide="menu"></i></div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="container">
+      <div class="hero-content" data-aos="fade-up">
+        <h1>Agricultural HUB</h1>
+        <h2>Smart Fertilizer. Stronger Crops.</h2>
+        <p>AI-powered recommendations for optimal nutrient blends, higher yields, and a greener planet.</p>
+        <div style="display:flex; gap:1rem; flex-wrap:wrap; margin-top:2rem;">
+          <a href="{{ url_for('recom_input') }}" class="btn btn-primary">
+            Get Started <i data-lucide="arrow-right"></i>
+          </a>
+          <a href="{{ url_for('learn_more') }}" class="btn btn-outline">
+            Learn More
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="container">
+      <div class="about-grid">
+        
+      <!-- Content Column -->
+        <div class="about-content" data-aos="fade-left">
+          <h2>Nurturing Soil, Nourishing Future</h2>
+          <p>Croptimizer uses cutting-edge AI to analyze soil health, climate data, and crop needs — delivering <strong>precise fertilizer recommendations</strong> that cut waste by up to <strong>30%</strong> and boost yields by <strong>20%</strong>.</p>
+          <p>Join thousands of farmers already harvesting smarter.</p>
+
+          <div class="stats">
+            <div class="stat">
+              <div class="num" data-count="30">0</div>
+              <div class="label">% Waste Reduced</div>
+            </div>
+            <div class="stat">
+              <div class="num" data-count="20">0</div>
+              <div class="label">% Yield Increase</div>
+            </div>
+            
+          </div>
+
+               </div>
+      </div>
+    </div>
+  </section>
+
+          <a href="{{ url_for('about') }}" class="btn btn-primary" style="margin-top:2rem;">
+            Explore More <i data-lucide="arrow-right"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-logo">
+            <img src="{{ url_for('static', filename='asset/logo.jpg') }}" alt="Logo">
+            Croptimizer
+          </div>
+          <p style="margin-top:1rem; opacity:.9;">
+            Sustainable agriculture through smart technology.
+          </p>
+               </div>
+
+        <div class="footer-links">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="{{ url_for('about') }}">About</a></li>
+            <li><a href="{{ url_for('services') }}">Services</a></li>
+            <li><a href="{{ url_for('contact') }}">Contact</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links">
+          <h4>Tools</h4>
+          <ul>
+            <li><a href="{{ url_for('recom_input') }}">Fertilizer Calculator</a></li>
+            <li><a href="#">Soil Health Checker</a></li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init({ duration: 1000, once: true });
+
+    // Hamburger
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('navMenu');
+    lucide.createIcons();
+    hamburger.addEventListener('click', () => {
+      navMenu.classList.toggle('open');
+      const icon = navMenu.classList.contains('open') ? 'x' : 'menu';
+      hamburger.innerHTML = `<i data-lucide="${icon}"></i>`;
+      lucide.createIcons();
+    });
+
+    // Stat counter
+    document.querySelectorAll('.num').forEach(el => {
+      const target = +el.getAttribute('data-count');
+      const inc = target / 80;
+      let current = 0;
+      const timer = setInterval(() => {
+        current += inc;
+        if (current >= target) {
+          el.textContent = target + (el.parentNode.nextElementSibling?.textContent.includes('%') ? '%' : '+');
+          clearInterval(timer);
+        } else {
+          el.textContent = Math.ceil(current) + (el.parentNode.nextElementSibling?.textContent.includes('%') ? '%' : '');
+        }
+      }, 30);
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        document.querySelector(a.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>We Tap Into the Power of Data | Croptimizer</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+
+  <!-- AOS Animation -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <style>
+    :root {
+      --primary: #1B5E20;
+      --secondary: #2E7D32;
+      --accent: #8BC34A;
+      --gold: #F9A825;
+      --dark: #0D3B0F;
+      --light: #F8FFF0;
+      --gray: #555;
+      --bg: #FAFFF5;
+      --gradient: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --shadow: 0 15px 35px rgba(0,0,0,0.1);
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: #333;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* Hero Section */
+    .hero {
+      height: 70vh;
+      min-height: 500px;
+      background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.65)),
+                  url('{{ url_for("static", filename="asset/resized_image_1 (1).jpg") }}') center/cover no-repeat;
+      background-attachment: fixed;
+      display: flex;
+      align-items: center;
+      color: white;
+      position: relative;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--gradient);
+      opacity: 0.4;
+    }
+
+    .hero-content {
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+      padding: 2rem;
+      z-index: 1;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      text-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+
+    .hero p {
+      font-size: 1.3rem;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+      opacity: 0.95;
+    }
+
+    /* Main Content */
+    .content {
+      padding: 100px 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      color: var(--primary);
+      text-align: center;
+      margin-bottom: 3rem;
+      position: relative;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: var(--gradient);
+      border-radius: 2px;
+    }
+
+    /* Insight Cards */
+    .insights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin: 3rem 0;
+    }
+
+    .insight-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      transition: all 0.4s ease;
+      border: 1px solid rgba(139,195,74,0.15);
+      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .insight-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 5px;
+      background: var(--gradient);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+
+    .insight-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .insight-card:hover {
+      transform: translateY(-12px);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.18);
+    }
+
+    .insight-icon {
+      width: 70px; height: 70px;
+      background: var(--gradient);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      color: white;
+      font-size: 1.8rem;
+    }
+
+    .insight-card h3 {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      color: var(--primary);
+    }
+
+    .insight-card p {
+      color: var(--gray);
+      font-size: 1rem;
+    }
+
+    /* Stats Section */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 2rem;
+      margin: 4rem 0;
+      text-align: center;
+    }
+
+    .stat-item {
+      padding: 1.5rem;
+    }
+
+    .stat-num {
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: var(--secondary);
+      display: block;
+    }
+
+    .stat-label {
+      color: var(--gray);
+      font-size: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    /* CTA Button */
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: var(--gradient);
+      color: white;
+      padding: 1rem 2.5rem;
+      border-radius: 50px;
+      font-weight: 600;
+      text-decoration: none;
+      box-shadow: 0 8px 20px rgba(46,125,50,0.3);
+      transition: all 0.3s ease;
+      margin: 2rem auto 0;
+      display: block;
+      width: fit-content;
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 28px rgba(46,125,50,0.4);
+    }
+
+    .cta-btn i {
+      transition: transform 0.3s;
+    }
+
+    .cta-btn:hover i {
+      transform: translateX(6px);
+    }
+
+    /* Back Button */
+    .back-link {
+      display: inline-block;
+      margin-top: 1.5rem;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 1rem;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--dark);
+      color: #ddd;
+      text-align: center;
+      padding: 2.5rem 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2.8rem; }
+      .hero p { font-size: 1.1rem; }
+      .content { padding: 60px 1rem; }
+      .section-title { font-size: 2rem; }
+      .insight-card { padding: 1.5rem; }
+      .stats { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content" data-aos="fade-up">
+      <h1>We Tap Into the Power of Data</h1>
+      <p>Transforming raw information into actionable insights that drive smarter, sustainable farming decisions.</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <div class="content">
+
+    <!-- Insight Cards -->
+    <h2 class="section-title" data-aos="fade-up">How Data Powers Croptimizer</h2>
+    <div class="insights-grid">
+      <div class="insight-card" data-aos="fade-up" data-aos-delay="100">
+        <div class="insight-icon">
+          <i data-lucide="zap"></i>
+        </div>
+        <h3>Actionable Insights</h3>
+        <p>Transform raw data into clear, farm-ready recommendations that boost yield and reduce waste.</p>
+      </div>
+
+      <div class="insight-card" data-aos="fade-up" data-aos-delay="200">
+        <div class="insight-icon">
+          <i data-lucide="trending-up"></i>
+        </div>
+        <h3>Pattern Recognition</h3>
+        <p>AI detects hidden trends in soil health, weather, and crop performance across millions of data points.</p>
+      </div>
+
+      <div class="insight-card" data-aos="fade-up" data-aos-delay="300">
+        <div class="insight-icon">
+          <i data-lucide="target"></i>
+        </div>
+        <h3>Predictive Power</h3>
+        <p>Forecast nutrient needs, pest risks, and optimal planting times with 95% accuracy.</p>
+      </div>
+
+      <div class="insight-card" data-aos="fade-up" data-aos-delay="400">
+        <div class="insight-icon">
+          <i data-lucide="cpu"></i>
+        </div>
+        <h3>Machine Learning</h3>
+        <p>Our models improve daily using real-world farm data from thousands of growers.</p>
+      </div>
+
+      <div class="insight-card" data-aos="fade-up" data-aos-delay="500">
+        <div class="insight-icon">
+          <i data-lucide="users"></i>
+        </div>
+        <h3>Personalized Solutions</h3>
+        <p>Tailored fertilizer plans based on your soil, crop, climate, and goals.</p>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat-item" data-aos="fade-up" data-aos-delay="100">
+        <span class="stat-num" data-count="10">0</span>M+
+        <div class="stat-label">Data Points Analyzed</div>
+      </div>
+      <div class="stat-item" data-aos="fade-up" data-aos-delay="200">
+        <span class="stat-num" data-count="95">0</span>%
+        <div class="stat-label">Prediction Accuracy</div>
+      </div>
+      <div class="stat-item" data-aos="fade-up" data-aos-delay="300">
+        <span class="stat-num" data-count="30">0</span>%
+        <div class="stat-label">Avg. Waste Reduced</div>
+      </div>
+      <div class="stat-item" data-aos="fade-up" data-aos-delay="400">
+        <span class="stat-num" data-count="5000">0</span>+
+        <div class="stat-label">Farmers Using AI</div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div style="text-align:center;">
+      <a href="{{ url_for('recom_input') }}" class="cta-btn" data-aos="zoom-in" data-aos-delay="200">
+        Get Your Data-Driven Plan <i data-lucide="arrow-right"></i>
+      </a>
+      <br>
+      <a href="{{ url_for('index') }}" class="back-link" data-aos="fade-up" data-aos-delay="300">
+        Back to Home
+      </a>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 Croptimizer. Data-Driven Agriculture for a Sustainable Future.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    // Initialize AOS
+    AOS.init({
+      duration: 1000,
+      once: true,
+      offset: 80
+    });
+
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Animated Counters
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const counters = entry.target.querySelectorAll('[data-count]');
+          counters.forEach(el => {
+            const target = +el.getAttribute('data-count');
+            const suffix = el.nextSibling?.nodeType === 3 ? el.nextSibling.textContent.trim() : '';
+            let current = 0;
+            const inc = target / 80;
+            const timer = setInterval(() => {
+              current += inc;
+              if (current >= target) {
+                el.textContent = target + suffix;
+                clearInterval(timer);
+              } else {
+                el.textContent = Math.ceil(current) + suffix;
+              }
+            }, 30);
+          });
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.stats').forEach(statSection => {
+      observer.observe(statSection);
+    });
+  </script>
+</body>
+</html>

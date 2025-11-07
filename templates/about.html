@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About Croptimizer – Smart Farming, Smarter Future</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+
+  <!-- AOS Animation -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <style>
+    :root {
+      --primary: #1B5E20;
+      --secondary: #2E7D32;
+      --accent: #8BC34A;
+      --gold: #F9A825;
+      --dark: #0D3B0F;
+      --light: #F8FFF0;
+      --gray: #555;
+      --bg: #FAFFF5;
+      --gradient: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: #333;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* Hero Section */
+    .hero {
+      height: 80vh;
+      min-height: 500px;
+      background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.6)),
+                  url('https://images.unsplash.com/photo-1500595046743-cd271d694d30?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') center/cover no-repeat;
+      background-attachment: fixed;
+      display: flex;
+      align-items: center;
+      color: white;
+      position: relative;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--gradient);
+      opacity: 0.3;
+    }
+
+    .hero-content {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+      padding: 2rem;
+      z-index: 1;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      text-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+
+    .hero p {
+      font-size: 1.3rem;
+      margin-bottom: 2rem;
+      opacity: 0.95;
+    }
+
+    /* Feature Cards */
+    .features {
+      padding: 100px 0;
+      background: white;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .feature-card {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      transition: all 0.4s ease;
+      border: 1px solid rgba(139,195,74,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 4px;
+      background: var(--gradient);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+
+    .feature-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-12px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+
+    .icon-wrapper {
+      width: 80px; height: 80px;
+      margin: 0 auto 1.5rem;
+      background: var(--gradient);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 2rem;
+    }
+
+    .feature-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--primary);
+    }
+
+    .feature-card p {
+      color: var(--gray);
+      font-size: 1rem;
+    }
+
+    /* Stats Section */
+    .stats {
+      padding: 80px 0;
+      background: var(--light);
+      text-align: center;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .stat-item {
+      padding: 1.5rem;
+    }
+
+    .stat-num {
+      font-size: 3rem;
+      font-weight: 900;
+      color: var(--secondary);
+      display: block;
+    }
+
+    .stat-label {
+      color: var(--gray);
+      font-size: 1.1rem;
+      margin-top: 0.5rem;
+    }
+
+    /* CTA Section */
+    .cta {
+      padding: 100px 0;
+      background: var(--gradient);
+      color: white;
+      text-align: center;
+    }
+
+    .cta h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .cta p {
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+      opacity: 0.9;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: white;
+      color: var(--primary);
+      padding: 1rem 2.5rem;
+      border-radius: 50px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    .btn:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.3);
+    }
+
+    .btn i {
+      transition: transform 0.3s;
+    }
+
+    .btn:hover i {
+      transform: translateX(6px);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--dark);
+      color: #ddd;
+      text-align: center;
+      padding: 3rem 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2.8rem; }
+      .hero p { font-size: 1.1rem; }
+      .features, .stats, .cta { padding: 60px 0; }
+      .stats-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content" data-aos="fade-up">
+      <h1>About Croptimizer</h1>
+      <p>Revolutionizing agriculture with AI-powered precision farming. Optimize fertilizer use, boost yields, and protect the planet.</p>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features">
+    <div class="features-grid">
+      <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+        <div class="icon-wrapper">
+          <i data-lucide="droplet"></i>
+        </div>
+        <h3>Fertilizer Optimization</h3>
+        <p>AI analyzes soil, crop type, and weather to deliver exact nutrient recommendations — reducing waste by up to 30%.</p>
+      </div>
+
+      <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+        <div class="icon-wrapper">
+          <i data-lucide="leaf"></i>
+        </div>
+        <h3>Environmental Impact</h3>
+        <p>Lower carbon footprint, reduced runoff, and sustainable practices that protect water and soil for future generations.</p>
+      </div>
+
+      <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+        <div class="icon-wrapper">
+          <i data-lucide="bar-chart-3"></i>
+        </div>
+        <h3>Advanced Analytics</h3>
+        <p>Real-time data insights, predictive modeling, and performance tracking for smarter farm management.</p>
+      </div>
+
+      <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
+        <div class="icon-wrapper">
+          <i data-lucide="headphones"></i>
+        </div>
+        <h3>Farmer Support</h3>
+        <p>24/7 access to expert agronomists, tutorials, and a global community of sustainable farmers.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats">
+    <div class="stats-grid">
+      <div class="stat-item" data-aos="fade-up">
+        <span class="stat-num" data-count="30">0</span>%
+        <div class="stat-label">Waste Reduced</div>
+      </div>
+      <div class="stat-item" data-aos="fade-up" data-aos-delay="100">
+        <span class="stat-num" data-count="20">0</span>%
+        <div class="stat-label">Yield Increase</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta">
+    <div class="container" data-aos="fade-up">
+      <h2>Ready to Grow Smarter?</h2>
+      <p>Join thousands of farmers already using Croptimizer to increase profits and sustainability.</p>
+      <a href="{{ url_for('recom_input') }}" class="btn">
+        Start Optimizing Now <i data-lucide="arrow-right"></i>
+      </a>
+    </div>
+  </section>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    // Initialize AOS
+    AOS.init({
+      duration: 1000,
+      once: true,
+      offset: 100
+    });
+
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Animated Counter
+    const counters = document.querySelectorAll('[data-count]');
+    const speed = 80;
+
+    const countUp = (el) => {
+      const target = +el.getAttribute('data-count');
+      const suffix = el.nextSibling?.nodeType === 3 ? el.nextSibling.textContent.trim() : '';
+      const inc = target / speed;
+      let current = 0;
+
+      const timer = setInterval(() => {
+        current += inc;
+        if (current >= target) {
+          el.textContent = target;
+          clearInterval(timer);
+        } else {
+          el.textContent = Math.ceil(current);
+        }
+      }, 20);
+    };
+
+    // Trigger counters when in view
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const num = entry.target.querySelector('[data-count]');
+          if (num) countUp(num);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.stat-item').forEach(item => {
+      observer.observe(item);
+    });
+  </script>
+</body>
+</html>

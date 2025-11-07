@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Your Personalized Fertilizer Plan 🎉</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+  <!-- AOS Animation -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+  <!-- Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #27ae60;
+      --secondary: #219a52;
+      --accent: #6ee7b7;
+      --glow: #27ae6088;
+      --text: #2c3e50;
+      --light: #f8fff9;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #e8f5e8, #d0f0d3);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+      color: var(--text);
+    }
+
+    /* Floating Particles */
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="3" fill="%2327ae60"/><circle cx="80" cy="70" r="2" fill="%236ee7b7"/></svg>') repeat;
+      opacity: 0.1;
+      animation: float 20s infinite linear;
+      pointer-events: none;
+    }
+
+    @keyframes float {
+      from { transform: translateY(0); }
+      to { transform: translateY(-100vh); }
+    }
+
+    .container {
+      perspective: 1000px;
+      padding: 2rem;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 28px;
+      padding: 3rem;
+      max-width: 700px;
+      box-shadow: 0 20px 60px rgba(39, 174, 96, 0.25);
+      transform-style: preserve-3d;
+      transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.6s;
+    }
+
+    .card:hover {
+      transform: translateY(-20px) rotateX(5deg) rotateY(5deg);
+      box-shadow: 0 40px 80px rgba(39, 174, 96, 0.4);
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      text-align: center;
+      background: linear-gradient(90deg, #27ae60, #6ee7b7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 1.3rem;
+      color: #27ae60;
+      font-weight: 600;
+      margin-bottom: 2rem;
+    }
+
+    /* Progress Circles */
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin: 2.5rem 0;
+    }
+
+    .stat-circle {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: conic-gradient(var(--primary) 0% var(--percent), #e0f7e9 var(--percent) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      box-shadow: 0 10px 30px rgba(39, 174, 96, 0.2);
+    }
+
+    .stat-circle::before {
+      content: '';
+      position: absolute;
+      inset: 10px;
+      background: white;
+      border-radius: 50%;
+    }
+
+    .stat-inner {
+      position: relative;
+      text-align: center;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .stat-inner span {
+      font-size: 1.8rem;
+      display: block;
+    }
+
+    .stat-inner small {
+      font-size: 0.8rem;
+      color: #666;
+    }
+
+    /* Benefits List */
+    .benefits {
+      text-align: left;
+      background: rgba(39, 174, 96, 0.05);
+      padding: 1.5rem;
+      border-radius: 16px;
+      border-left: 5px solid var(--primary);
+      margin: 2rem 0;
+    }
+
+    .benefits li {
+      padding: 0.7rem 0;
+      font-size: 1.1rem;
+      position: relative;
+      padding-left: 30px;
+    }
+
+    .benefits li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+      font-weight: bold;
+      font-size: 1.3rem;
+    }
+
+    /* Buttons */
+    .btn-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      padding: 14px 32px;
+      border-radius: 50px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 8px 25px rgba(39, 174, 96, 0.4);
+    }
+
+    .btn-primary:hover {
+      background: var(--secondary);
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(39, 174, 96, 0.5);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+
+    .btn-outline:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn i {
+      font-size: 1.2rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.3rem; }
+      .card { padding: 2rem; }
+      .stats { gap: 1rem; }
+      .stat-circle { width: 100px; height: 100px; }
+      .stat-inner span { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="card" data-aos="zoom-in-up">
+      <h1>🎉 Congratulations!</h1>
+      <p class="subtitle">Your Personalized Fertilizer Plan is Ready</p>
+
+      <!-- Stats -->
+      <div class="stats">
+        <div class="stat-circle" style="--percent: 85%">
+          <div class="stat-inner">
+            <span>85%</span>
+            <small>Yield Boost</small>
+          </div>
+        </div>
+        <div class="stat-circle" style="--percent: 70%">
+          <div class="stat-inner">
+            <span>70%</span>
+            <small>Less Waste</small>
+          </div>
+        </div>
+        <div class="stat-circle" style="--percent: 92%">
+          <div class="stat-inner">
+            <span>92%</span>
+            <small>Eco Score</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Benefits -->
+      <div class="benefits" data-aos="fade-up" data-aos-delay="300">
+        <ul>
+          <li>AI-powered nutrient mix tailored to your soil & crop</li>
+          <li>Save up to 40% on fertilizer costs</li>
+          <li>Reduce environmental impact dramatically</li>
+          <li>Get 15-30% higher yields guaranteed</li>
+          <li>Real-time adjustments via Croptimizer app</li>
+        </ul>
+      </div>
+
+      <!-- Buttons -->
+      <div class="btn-group">
+        <a href="#" class="btn btn-primary" onclick="triggerConfetti(); return false;">
+          <i class="fas fa-party-horn"></i> Celebrate My Plan!
+        </a>
+        <a href="{{ url_for('learn_more') }}" class="btn btn-outline">
+          <i class="fas fa-book-open"></i> Learn More
+        </a>
+        <a href="#" class="btn btn-outline" onclick="copyPlan(); return false;">
+          <i class="fas fa-copy"></i> Copy Plan
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init({ duration: 1200, once: true });
+
+    function triggerConfetti() {
+      confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#27ae60', '#6ee7b7', '#a8e6cf']
+      });
+    }
+
+    function copyPlan() {
+      navigator.clipboard.writeText("Your Personalized Croptimizer Plan:\n• 85% Yield Boost\n• 70% Less Waste\n• 92% Eco Score\n• Custom AI nutrient mix");
+      alert("✅ Plan copied to clipboard!");
+    }
+  </script>
+
+  <!-- Font Awesome -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
+</body>
+</html>

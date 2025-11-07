@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nurturing Soil, Nourishing Crops | Croptimizer</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+
+  <!-- AOS Animation -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <style>
+    :root {
+      --primary: #1B5E20;
+      --secondary: #2E7D32;
+      --accent: #8BC34A;
+      --gold: #F9A825;
+      --dark: #0D3B0F;
+      --light: #F8FFF0;
+      --gray: #555;
+      --bg: #FAFFF5;
+      --gradient: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --shadow: 0 15px 35px rgba(0,0,0,0.1);
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: #333;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* Hero Section */
+    .hero {
+      height: 70vh;
+      min-height: 500px;
+      background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.6)),
+                  url('{{ url_for("static", filename="asset/ferty.jpg") }}') center/cover no-repeat;
+      background-attachment: fixed;
+      display: flex;
+      align-items: center;
+      color: white;
+      position: relative;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--gradient);
+      opacity: 0.4;
+    }
+
+    .hero-content {
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+      padding: 2rem;
+      z-index: 1;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      text-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+
+    .hero p {
+      font-size: 1.3rem;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+      opacity: 0.95;
+    }
+
+    /* Main Content */
+    .content {
+      padding: 100px 0;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      color: var(--primary);
+      text-align: center;
+      margin-bottom: 3rem;
+      position: relative;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: var(--gradient);
+      border-radius: 2px;
+    }
+
+    /* Interactive Cards */
+    .tips-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin: 3rem 0;
+    }
+
+    .tip-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      transition: all 0.4s ease;
+      border: 1px solid rgba(139,195,74,0.15);
+      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tip-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 5px;
+      background: var(--gradient);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+
+    .tip-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .tip-card:hover {
+      transform: translateY(-12px);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.18);
+    }
+
+    .tip-icon {
+      width: 70px; height: 70px;
+      background: var(--gradient);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      color: white;
+      font-size: 1.8rem;
+    }
+
+    .tip-card h3 {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      color: var(--primary);
+    }
+
+    .tip-card p {
+      color: var(--gray);
+      font-size: 1rem;
+    }
+
+    /* Benefits List (Interactive) */
+    .benefits {
+      background: white;
+      border-radius: 20px;
+      padding: 2.5rem;
+      box-shadow: var(--shadow);
+      margin: 3rem 0;
+    }
+
+    .benefit-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .benefit-item:last-child {
+      border-bottom: none;
+    }
+
+    .benefit-item:hover {
+      background: rgba(139,195,74,0.05);
+      padding-left: 1rem;
+      border-radius: 12px;
+    }
+
+    .benefit-icon {
+      color: var(--secondary);
+      font-size: 1.5rem;
+      margin-top: 0.2rem;
+    }
+
+    .benefit-text h4 {
+      font-size: 1.2rem;
+      color: var(--primary);
+      margin-bottom: 0.3rem;
+    }
+
+    .benefit-text p {
+      color: var(--gray);
+      font-size: 0.95rem;
+    }
+
+    /* CTA Button */
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: var(--gradient);
+      color: white;
+      padding: 1rem 2.5rem;
+      border-radius: 50px;
+      font-weight: 600;
+      text-decoration: none;
+      box-shadow: 0 8px 20px rgba(46,125,50,0.3);
+      transition: all 0.3s ease;
+      margin: 2rem auto 0;
+      display: block;
+      width: fit-content;
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 28px rgba(46,125,50,0.4);
+    }
+
+    .cta-btn i {
+      transition: transform 0.3s;
+    }
+
+    .cta-btn:hover i {
+      transform: translateX(6px);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--dark);
+      color: #ddd;
+      text-align: center;
+      padding: 2.5rem 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2.8rem; }
+      .hero p { font-size: 1.1rem; }
+      .content { padding: 60px 0; }
+      .section-title { font-size: 2rem; }
+      .tip-card { padding: 1.5rem; }
+      .benefits { padding: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content" data-aos="fade-up">
+      <h1>Nurturing Soil, Nourishing Crops</h1>
+      <p>Discover science-backed practices to build healthier soil, grow stronger crops, and farm sustainably for generations.</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <div class="content">
+
+    <!-- Why Soil Health Matters -->
+    <h2 class="section-title" data-aos="fade-up">Why Soil Health Matters</h2>
+    <p style="text-align:center; max-width:800px; margin:0 auto 3rem; color:#555;" data-aos="fade-up" data-aos-delay="100">
+      Healthy soil is the foundation of sustainable agriculture. It provides essential nutrients, water, and support for plants. By focusing on soil health, farmers can improve crop yields, enhance resilience to pests and diseases, and ensure long-term agricultural productivity.
+    </p>
+
+    <!-- Best Practices (Interactive Cards) -->
+    <h2 class="section-title" data-aos="fade-up">Best Practices for Soil Management</h2>
+    <div class="tips-grid">
+      <div class="tip-card" data-aos="fade-up" data-aos-delay="100">
+        <div class="tip-icon">
+          <i data-lucide="flask-conical"></i>
+        </div>
+        <h3>Soil Testing</h3>
+        <p>Regularly test your soil to understand its nutrient levels and pH balance for precise fertilization.</p>
+      </div>
+
+      <div class="tip-card" data-aos="fade-up" data-aos-delay="200">
+        <div class="tip-icon">
+          <i data-lucide="refresh-cw"></i>
+        </div>
+        <h3>Crop Rotation</h3>
+        <p>Change crops each season to prevent nutrient depletion and naturally control pests and diseases.</p>
+      </div>
+
+      <div class="tip-card" data-aos="fade-up" data-aos-delay="300">
+        <div class="tip-icon">
+          <i data-lucide="package"></i>
+        </div>
+        <h3>Organic Matter</h3>
+        <p>Add compost or organic manure to enrich the soil with microbes and improve water retention.</p>
+      </div>
+
+      <div class="tip-card" data-aos="fade-up" data-aos-delay="400">
+        <div class="tip-icon">
+          <i data-lucide="shield"></i>
+        </div>
+        <h3>Cover Crops</h3>
+        <p>Plant cover crops to protect soil from erosion, suppress weeds, and boost organic content.</p>
+      </div>
+    </div>
+
+    <!-- Benefits (Interactive List) -->
+    <h2 class="section-title" data-aos="fade-up">Benefits of Nourished Crops</h2>
+    <div class="benefits" data-aos="fade-up" data-aos-delay="100">
+      <div class="benefit-item">
+        <div class="benefit-icon">
+          <i data-lucide="trending-up"></i>
+        </div>
+        <div class="benefit-text">
+          <h4>Higher Yields</h4>
+          <p>Optimized nutrition leads to 15–25% increase in harvest volume.</p>
+        </div>
+      </div>
+
+      <div class="benefit-item">
+        <div class="benefit-icon">
+          <i data-lucide="award"></i>
+        </div>
+        <div class="benefit-text">
+          <h4>Better Quality</h4>
+          <p>Improved taste, size, and nutritional value of produce.</p>
+        </div>
+      </div>
+
+      <div class="benefit-item">
+        <div class="benefit-icon">
+          <i data-lucide="shield-check"></i>
+        </div>
+        <div class="benefit-text">
+          <h4>Disease Resistance</h4>
+          <p>Stronger plants naturally resist pests and fungal infections.</p>
+        </div>
+      </div>
+
+      <div class="benefit-item">
+        <div class="benefit-icon">
+          <i data-lucide="leaf"></i>
+        </div>
+        <div class="benefit-text">
+          <h4>Reduced Chemicals</h4>
+          <p>Cut synthetic fertilizer use by up to 40% with smart practices.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Conclusion & CTA -->
+    <h2 class="section-title" data-aos="fade-up">Start Your Soil Journey</h2>
+    <p style="text-align:center; max-width:800px; margin:0 auto 2rem; color:#555;" data-aos="fade-up" data-aos-delay="100">
+      Sustainable farming begins with the soil. By nurturing your soil and adopting best practices, you not only enhance your crop production but also contribute to a healthier environment for future generations.
+    </p>
+
+    <div style="text-align:center;">
+      <a href="{{ url_for('recom_input') }}" class="cta-btn" data-aos="zoom-in" data-aos-delay="200">
+        Get AI Soil Recommendations <i data-lucide="arrow-right"></i>
+      </a>
+      <br><br>
+      <a href="{{ url_for('index') }}" style="color:var(--primary); text-decoration:none; font-weight:500;" data-aos="fade-up" data-aos-delay="300">
+        Back to Home
+      </a>
+    </div>
+  </div>
+
+ 
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    // Initialize AOS
+    AOS.init({
+      duration: 1000,
+      once: true,
+      offset: 80
+    });
+
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Interactive hover effect on benefit items
+    document.querySelectorAll('.benefit-item').forEach(item => {
+      item.addEventListener('mouseenter', () => {
+        item.style.background = 'rgba(139,195,74,0.08)';
+      });
+      item.addEventListener('mouseleave', () => {
+        item.style.background = 'transparent';
+      });
+    });
+  </script>
+</body>
+</html>
